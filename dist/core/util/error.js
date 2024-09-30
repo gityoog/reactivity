@@ -9,6 +9,7 @@ const debug_1 = require("./debug");
 const env_1 = require("./env");
 const util_1 = require("../../shared/util");
 const dep_1 = require("../observer/dep");
+const isDev_1 = require("./isDev");
 function handleError(err, vm, info) {
     // Deactivate deps tracking while processing error handler to avoid possible infinite rendering.
     // See: https://github.com/vuejs/vuex/issues/1505
@@ -70,7 +71,7 @@ function globalHandleError(err, vm, info) {
     logError(err, vm, info);
 }
 function logError(err, vm, info) {
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         (0, debug_1.warn)(`Error in ${info}: "${err.toString()}"`, vm);
     }
     /* istanbul ignore else */

@@ -9,6 +9,7 @@ const array_1 = require("./array");
 const index_1 = require("../util/index");
 const reactive_1 = require("../../reactive");
 const ref_1 = require("../../ref");
+const isDev_1 = require("../util/isDev");
 const arrayKeys = Object.getOwnPropertyNames(array_1.arrayMethods);
 const NO_INITIAL_VALUE = {};
 /**
@@ -127,7 +128,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
         get: function reactiveGetter() {
             const value = getter ? getter.call(obj) : val;
             if (dep_1.default.target) {
-                if (__DEV__) {
+                if ((0, isDev_1.isDev)()) {
                     dep.depend({
                         target: obj,
                         type: "get" /* TrackOpTypes.GET */,
@@ -151,7 +152,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
             if (!(0, index_1.hasChanged)(value, newVal)) {
                 return;
             }
-            if (__DEV__ && customSetter) {
+            if ((0, isDev_1.isDev)() && customSetter) {
                 customSetter();
             }
             if (setter) {
@@ -169,7 +170,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
                 val = newVal;
             }
             childOb = shallow ? newVal && newVal.__ob__ : observe(newVal, false, mock);
-            if (__DEV__) {
+            if ((0, isDev_1.isDev)()) {
                 dep.notify({
                     type: "set" /* TriggerOpTypes.SET */,
                     target: obj,
@@ -187,11 +188,11 @@ function defineReactive(obj, key, val, customSetter, shallow, mock, observeEvenI
 }
 exports.defineReactive = defineReactive;
 function set(target, key, val) {
-    if (__DEV__ && ((0, index_1.isUndef)(target) || (0, index_1.isPrimitive)(target))) {
+    if ((0, isDev_1.isDev)() && ((0, index_1.isUndef)(target) || (0, index_1.isPrimitive)(target))) {
         (0, index_1.warn)(`Cannot set reactive property on undefined, null, or primitive value: ${target}`);
     }
     if ((0, reactive_1.isReadonly)(target)) {
-        __DEV__ && (0, index_1.warn)(`Set operation on key "${key}" failed: target is readonly.`);
+        (0, isDev_1.isDev)() && (0, index_1.warn)(`Set operation on key "${key}" failed: target is readonly.`);
         return;
     }
     const ob = target.__ob__;
@@ -209,7 +210,7 @@ function set(target, key, val) {
         return val;
     }
     if (target._isVue || (ob && ob.vmCount)) {
-        __DEV__ &&
+        (0, isDev_1.isDev)() &&
             (0, index_1.warn)('Avoid adding reactive properties to a Vue instance or its root $data ' +
                 'at runtime - declare it upfront in the data option.');
         return val;
@@ -219,7 +220,7 @@ function set(target, key, val) {
         return val;
     }
     defineReactive(ob.value, key, val, undefined, ob.shallow, ob.mock);
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         ob.dep.notify({
             type: "add" /* TriggerOpTypes.ADD */,
             target: target,
@@ -235,7 +236,7 @@ function set(target, key, val) {
 }
 exports.set = set;
 function del(target, key) {
-    if (__DEV__ && ((0, index_1.isUndef)(target) || (0, index_1.isPrimitive)(target))) {
+    if ((0, isDev_1.isDev)() && ((0, index_1.isUndef)(target) || (0, index_1.isPrimitive)(target))) {
         (0, index_1.warn)(`Cannot delete reactive property on undefined, null, or primitive value: ${target}`);
     }
     if ((0, index_1.isArray)(target) && (0, index_1.isValidArrayIndex)(key)) {
@@ -244,13 +245,13 @@ function del(target, key) {
     }
     const ob = target.__ob__;
     if (target._isVue || (ob && ob.vmCount)) {
-        __DEV__ &&
+        (0, isDev_1.isDev)() &&
             (0, index_1.warn)('Avoid deleting properties on a Vue instance or its root $data ' +
                 '- just set it to null.');
         return;
     }
     if ((0, reactive_1.isReadonly)(target)) {
-        __DEV__ &&
+        (0, isDev_1.isDev)() &&
             (0, index_1.warn)(`Delete operation on key "${key}" failed: target is readonly.`);
         return;
     }
@@ -261,7 +262,7 @@ function del(target, key) {
     if (!ob) {
         return;
     }
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         ob.dep.notify({
             type: "delete" /* TriggerOpTypes.DELETE */,
             target: target,

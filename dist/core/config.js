@@ -1,15 +1,8 @@
 "use strict";
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 const util_1 = require("../shared/util");
 const constants_1 = require("../shared/constants");
-const util_2 = require("./util");
-if (util_2.inBrowser) {
-    window.__DEV__ = (_a = window.__DEV__) !== null && _a !== void 0 ? _a : true;
-}
-else {
-    global.__DEV__ = (_b = global.__DEV__) !== null && _b !== void 0 ? _b : true;
-}
+const isDev_1 = require("./util/isDev");
 exports.default = {
     /**
      * Option merge strategies (used in core/util/options)
@@ -23,11 +16,11 @@ exports.default = {
     /**
      * Show production mode tip message on boot?
      */
-    productionTip: __DEV__,
+    productionTip: (0, isDev_1.isDev)(),
     /**
      * Whether to enable devtools
      */
-    devtools: __DEV__,
+    devtools: (0, isDev_1.isDev)(),
     /**
      * Whether to record perf
      */

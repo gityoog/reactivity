@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.arrayMethods = void 0;
 const index_1 = require("../util/index");
+const isDev_1 = require("../util/isDev");
 const arrayProto = Array.prototype;
 exports.arrayMethods = Object.create(arrayProto);
 const methodsToPatch = [
@@ -39,7 +40,7 @@ methodsToPatch.forEach(function (method) {
         if (inserted)
             ob.observeArray(inserted);
         // notify change
-        if (__DEV__) {
+        if ((0, isDev_1.isDev)()) {
             ob.dep.notify({
                 type: "array mutation" /* TriggerOpTypes.ARRAY_MUTATION */,
                 target: this,

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.onScopeDispose = exports.getCurrentScope = exports.recordEffectScope = exports.effectScope = exports.EffectScope = exports.activeEffectScope = void 0;
 const util_1 = require("./core/util");
+const isDev_1 = require("./core/util/isDev");
 class EffectScope {
     constructor(detached = false) {
         this.detached = detached;
@@ -34,7 +35,7 @@ class EffectScope {
                 exports.activeEffectScope = currentEffectScope;
             }
         }
-        else if (__DEV__) {
+        else if ((0, isDev_1.isDev)()) {
             (0, util_1.warn)(`cannot run an inactive effect scope.`);
         }
     }
@@ -102,7 +103,7 @@ function onScopeDispose(fn) {
     if (exports.activeEffectScope) {
         exports.activeEffectScope.cleanups.push(fn);
     }
-    else if (__DEV__) {
+    else if ((0, isDev_1.isDev)()) {
         (0, util_1.warn)(`onScopeDispose() is called when there is no active effect scope` +
             ` to be associated with.`);
     }

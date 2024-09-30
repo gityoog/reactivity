@@ -12,6 +12,7 @@ const env_1 = require("./env");
 const util_1 = require("../../shared/util");
 const constants_1 = require("../../shared/constants");
 const util_2 = require("../../shared/util");
+const isDev_1 = require("./isDev");
 /**
  * Option overwriting strategies are functions that handle
  * how to merge a parent option value and a child option
@@ -21,7 +22,7 @@ const strats = config_1.default.optionMergeStrategies;
 /**
  * Options with restrictions
  */
-if (__DEV__) {
+if ((0, isDev_1.isDev)()) {
     strats.el = strats.propsData = function (parent, child, vm, key) {
         if (!vm) {
             (0, debug_1.warn)(`option "${key}" can only be used during instance ` +
@@ -101,7 +102,7 @@ exports.mergeDataOrFn = mergeDataOrFn;
 strats.data = function (parentVal, childVal, vm) {
     if (!vm) {
         if (childVal && typeof childVal !== 'function') {
-            __DEV__ &&
+            (0, isDev_1.isDev)() &&
                 (0, debug_1.warn)('The "data" option should be a function ' +
                     'that returns a per-instance value in component ' +
                     'definitions.', vm);
@@ -147,7 +148,7 @@ constants_1.LIFECYCLE_HOOKS.forEach(hook => {
 function mergeAssets(parentVal, childVal, vm, key) {
     const res = Object.create(parentVal || null);
     if (childVal) {
-        __DEV__ && assertObjectType(key, childVal, vm);
+        (0, isDev_1.isDev)() && assertObjectType(key, childVal, vm);
         return (0, util_2.extend)(res, childVal);
     }
     else {
@@ -174,7 +175,7 @@ strats.watch = function (parentVal, childVal, vm, key) {
     /* istanbul ignore if */
     if (!childVal)
         return Object.create(parentVal || null);
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         assertObjectType(key, childVal, vm);
     }
     if (!parentVal)
@@ -199,7 +200,7 @@ strats.props =
         strats.inject =
             strats.computed =
                 function (parentVal, childVal, vm, key) {
-                    if (childVal && __DEV__) {
+                    if (childVal && (0, isDev_1.isDev)()) {
                         assertObjectType(key, childVal, vm);
                     }
                     if (!parentVal)
@@ -269,7 +270,7 @@ function normalizeProps(options, vm) {
                 name = (0, util_2.camelize)(val);
                 res[name] = { type: null };
             }
-            else if (__DEV__) {
+            else if ((0, isDev_1.isDev)()) {
                 (0, debug_1.warn)('props must be strings when using array syntax.');
             }
         }
@@ -281,7 +282,7 @@ function normalizeProps(options, vm) {
             res[name] = (0, util_2.isPlainObject)(val) ? val : { type: val };
         }
     }
-    else if (__DEV__) {
+    else if ((0, isDev_1.isDev)()) {
         (0, debug_1.warn)(`Invalid value for option "props": expected an Array or an Object, ` +
             `but got ${(0, util_2.toRawType)(props)}.`, vm);
     }
@@ -308,7 +309,7 @@ function normalizeInject(options, vm) {
                 : { from: val };
         }
     }
-    else if (__DEV__) {
+    else if ((0, isDev_1.isDev)()) {
         (0, debug_1.warn)(`Invalid value for option "inject": expected an Array or an Object, ` +
             `but got ${(0, util_2.toRawType)(inject)}.`, vm);
     }
@@ -355,7 +356,7 @@ function resolveAsset(options, type, id, warnMissing) {
         return assets[PascalCaseId];
     // fallback to prototype chain
     const res = assets[id] || assets[camelizedId] || assets[PascalCaseId];
-    if (__DEV__ && warnMissing && !res) {
+    if ((0, isDev_1.isDev)() && warnMissing && !res) {
         (0, debug_1.warn)('Failed to resolve ' + type.slice(0, -1) + ': ' + id);
     }
     return res;

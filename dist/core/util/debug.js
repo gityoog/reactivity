@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.tip = exports.warn = void 0;
 const config_1 = __importDefault(require("../config"));
 const util_1 = require("../../shared/util");
+const isDev_1 = require("./isDev");
 exports.warn = util_1.noop;
 exports.tip = util_1.noop;
-if (__DEV__) {
+if ((0, isDev_1.isDev)()) {
     const hasConsole = typeof console !== 'undefined';
     exports.warn = (msg, vm = null) => {
         const trace = '';

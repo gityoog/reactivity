@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.isCollectionType = exports.markRaw = exports.toRaw = exports.isProxy = exports.isReadonly = exports.isShallow = exports.isReactive = exports.shallowReactive = exports.reactive = void 0;
 const observer_1 = require("./core/observer");
 const util_1 = require("./core/util");
+const isDev_1 = require("./core/util/isDev");
 function reactive(target) {
     makeReactive(target, false);
     return target;
@@ -22,7 +23,7 @@ exports.shallowReactive = shallowReactive;
 function makeReactive(target, shallow) {
     // if trying to observe a readonly proxy, return the readonly version.
     if (!isReadonly(target)) {
-        if (__DEV__) {
+        if ((0, isDev_1.isDev)()) {
             if ((0, util_1.isArray)(target)) {
                 (0, util_1.warn)(`Avoid using Array as root value for ${shallow ? `shallowReactive()` : `reactive()`} as it cannot be tracked in watch() or watchEffect(). Use ${shallow ? `shallowRef()` : `ref()`} instead. This is a Vue-2-only limitation.`);
             }
@@ -32,7 +33,7 @@ function makeReactive(target, shallow) {
             }
         }
         const ob = (0, observer_1.observe)(target, shallow, (0, util_1.isServerRendering)() /* ssr mock reactivity */);
-        if (__DEV__ && !ob) {
+        if ((0, isDev_1.isDev)() && !ob) {
             if (target == null || (0, util_1.isPrimitive)(target)) {
                 (0, util_1.warn)(`value cannot be made reactive: ${String(target)}`);
             }

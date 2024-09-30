@@ -10,6 +10,7 @@ const util_1 = require("./core/util");
 const traverse_1 = require("./core/observer/traverse");
 const watcher_1 = __importDefault(require("./core/observer/watcher"));
 const scheduler_1 = require("./core/observer/scheduler");
+const isDev_1 = require("./core/util/isDev");
 const WATCHER = `watcher`;
 const WATCHER_CB = `${WATCHER} callback`;
 const WATCHER_GETTER = `${WATCHER} getter`;
@@ -20,12 +21,12 @@ function watchEffect(effect, options) {
 }
 exports.watchEffect = watchEffect;
 function watchPostEffect(effect, options) {
-    return doWatch(effect, null, (__DEV__
+    return doWatch(effect, null, ((0, isDev_1.isDev)()
         ? Object.assign(Object.assign({}, options), { flush: 'post' }) : { flush: 'post' }));
 }
 exports.watchPostEffect = watchPostEffect;
 function watchSyncEffect(effect, options) {
-    return doWatch(effect, null, (__DEV__
+    return doWatch(effect, null, ((0, isDev_1.isDev)()
         ? Object.assign(Object.assign({}, options), { flush: 'sync' }) : { flush: 'sync' }));
 }
 exports.watchSyncEffect = watchSyncEffect;
@@ -33,7 +34,7 @@ exports.watchSyncEffect = watchSyncEffect;
 const INITIAL_WATCHER_VALUE = {};
 // implementation
 function watch(source, cb, options) {
-    if (__DEV__ && typeof cb !== 'function') {
+    if ((0, isDev_1.isDev)() && typeof cb !== 'function') {
         (0, util_1.warn)(`\`watch(fn, options?)\` signature has been moved to a separate API. ` +
             `Use \`watchEffect(fn, options?)\` instead. \`watch\` now only ` +
             `supports \`watch(source, cb, options?) signature.`);
@@ -42,7 +43,7 @@ function watch(source, cb, options) {
 }
 exports.watch = watch;
 function doWatch(source, cb, { immediate, deep, flush = 'pre', onTrack, onTrigger } = util_1.emptyObject) {
-    if (__DEV__ && !cb) {
+    if ((0, isDev_1.isDev)() && !cb) {
         if (immediate !== undefined) {
             (0, util_1.warn)(`watch() "immediate" option is only respected when using the ` +
                 `watch(source, callback, options?) signature.`);
@@ -93,7 +94,7 @@ function doWatch(source, cb, { immediate, deep, flush = 'pre', onTrack, onTrigge
                 return call(s, WATCHER_GETTER);
             }
             else {
-                __DEV__ && warnInvalidSource(s);
+                (0, isDev_1.isDev)() && warnInvalidSource(s);
             }
         });
     }
@@ -114,7 +115,7 @@ function doWatch(source, cb, { immediate, deep, flush = 'pre', onTrack, onTrigge
     }
     else {
         getter = util_1.noop;
-        __DEV__ && warnInvalidSource(source);
+        (0, isDev_1.isDev)() && warnInvalidSource(source);
     }
     if (cb && deep) {
         const baseGetter = getter;
@@ -192,7 +193,7 @@ function doWatch(source, cb, { immediate, deep, flush = 'pre', onTrack, onTrigge
             (0, scheduler_1.queueWatcher)(watcher);
         };
     }
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         watcher.onTrack = onTrack;
         watcher.onTrigger = onTrigger;
     }

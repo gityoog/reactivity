@@ -8,13 +8,14 @@ const util_1 = require("./core/util");
 const ref_1 = require("./ref");
 const watcher_1 = __importDefault(require("./core/observer/watcher"));
 const dep_1 = __importDefault(require("./core/observer/dep"));
+const isDev_1 = require("./core/util/isDev");
 function computed(getterOrOptions, debugOptions) {
     let getter;
     let setter;
     const onlyGetter = (0, util_1.isFunction)(getterOrOptions);
     if (onlyGetter) {
         getter = getterOrOptions;
-        setter = __DEV__
+        setter = (0, isDev_1.isDev)()
             ? () => {
                 (0, util_1.warn)('Write operation failed: computed value is readonly');
             }
@@ -27,7 +28,7 @@ function computed(getterOrOptions, debugOptions) {
     const watcher = (0, util_1.isServerRendering)()
         ? null
         : new watcher_1.default(null, getter, util_1.noop, { lazy: true });
-    if (__DEV__ && watcher && debugOptions) {
+    if ((0, isDev_1.isDev)() && watcher && debugOptions) {
         watcher.onTrack = debugOptions.onTrack;
         watcher.onTrigger = debugOptions.onTrigger;
     }
@@ -41,7 +42,7 @@ function computed(getterOrOptions, debugOptions) {
                     watcher.evaluate();
                 }
                 if (dep_1.default.target) {
-                    if (__DEV__ && dep_1.default.target.onTrack) {
+                    if ((0, isDev_1.isDev)() && dep_1.default.target.onTrack) {
                         dep_1.default.target.onTrack({
                             effect: dep_1.default.target,
                             target: ref,

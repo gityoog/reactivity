@@ -2,7 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.measure = exports.mark = void 0;
 const env_1 = require("./env");
-if (__DEV__) {
+const isDev_1 = require("./isDev");
+if ((0, isDev_1.isDev)()) {
     const perf = env_1.inBrowser && window.performance;
     /* istanbul ignore if */
     if (perf &&

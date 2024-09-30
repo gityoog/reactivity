@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.shallowReadonly = exports.readonly = void 0;
 const util_1 = require("./core/util");
+const isDev_1 = require("./core/util/isDev");
 const reactive_1 = require("./reactive");
 const ref_1 = require("./ref");
 const rawToReadonlyFlag = `__v_rawToReadonly`;
@@ -12,7 +13,7 @@ function readonly(target) {
 exports.readonly = readonly;
 function createReadonly(target, shallow) {
     if (!(0, util_1.isPlainObject)(target)) {
-        if (__DEV__) {
+        if ((0, isDev_1.isDev)()) {
             if ((0, util_1.isArray)(target)) {
                 (0, util_1.warn)(`Vue 2 does not support readonly arrays.`);
             }
@@ -25,7 +26,7 @@ function createReadonly(target, shallow) {
         }
         return target;
     }
-    if (__DEV__ && !Object.isExtensible(target)) {
+    if ((0, isDev_1.isDev)() && !Object.isExtensible(target)) {
         (0, util_1.warn)(`Vue 2 does not support creating readonly proxy for non-extensible object.`);
     }
     // already a readonly object
@@ -63,7 +64,7 @@ function defineReadonlyProperty(proxy, target, key, shallow) {
             return shallow || !(0, util_1.isPlainObject)(val) ? val : readonly(val);
         },
         set() {
-            __DEV__ &&
+            (0, isDev_1.isDev)() &&
                 (0, util_1.warn)(`Set operation on key "${key}" failed: target is readonly.`);
         }
     });

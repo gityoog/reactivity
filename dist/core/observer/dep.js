@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.popTarget = exports.pushTarget = exports.cleanupDeps = void 0;
 const config_1 = __importDefault(require("../config"));
+const isDev_1 = require("../util/isDev");
 let uid = 0;
 const pendingCleanupDeps = [];
 const cleanupDeps = () => {
@@ -45,7 +46,7 @@ class Dep {
     depend(info) {
         if (Dep.target) {
             Dep.target.addDep(this);
-            if (__DEV__ && info && Dep.target.onTrack) {
+            if ((0, isDev_1.isDev)() && info && Dep.target.onTrack) {
                 Dep.target.onTrack(Object.assign({ effect: Dep.target }, info));
             }
         }
@@ -53,7 +54,7 @@ class Dep {
     notify(info) {
         // stabilize the subscriber list first
         const subs = this.subs.filter(s => s);
-        if (__DEV__ && !config_1.default.async) {
+        if ((0, isDev_1.isDev)() && !config_1.default.async) {
             // subs aren't sorted in scheduler if not running async
             // we need to sort them now to make sure they fire in correct
             // order
@@ -61,7 +62,7 @@ class Dep {
         }
         for (let i = 0, l = subs.length; i < l; i++) {
             const sub = subs[i];
-            if (__DEV__ && info) {
+            if ((0, isDev_1.isDev)() && info) {
                 sub.onTrigger &&
                     sub.onTrigger(Object.assign({ effect: subs[i] }, info));
             }

@@ -5,6 +5,7 @@ const traverse_1 = require("./traverse");
 const scheduler_1 = require("./scheduler");
 const dep_1 = require("./dep");
 const effectScope_1 = require("../../effectScope");
+const isDev_1 = require("../util/isDev");
 let uid = 0;
 /**
  * A watcher parses an expression, collects dependencies,
@@ -32,7 +33,7 @@ class Watcher {
             this.lazy = !!options.lazy;
             this.sync = !!options.sync;
             this.before = options.before;
-            if (__DEV__) {
+            if ((0, isDev_1.isDev)()) {
                 this.onTrack = options.onTrack;
                 this.onTrigger = options.onTrigger;
             }
@@ -49,7 +50,7 @@ class Watcher {
         this.newDeps = [];
         this.depIds = new Set();
         this.newDepIds = new Set();
-        this.expression = __DEV__ ? expOrFn.toString() : '';
+        this.expression = (0, isDev_1.isDev)() ? expOrFn.toString() : '';
         // parse expression for getter
         if ((0, index_1.isFunction)(expOrFn)) {
             this.getter = expOrFn;
@@ -58,7 +59,7 @@ class Watcher {
             this.getter = (0, index_1.parsePath)(expOrFn);
             if (!this.getter) {
                 this.getter = index_1.noop;
-                __DEV__ &&
+                (0, isDev_1.isDev)() &&
                     (0, index_1.warn)(`Failed watching path: "${expOrFn}" ` +
                         'Watcher only accepts simple dot-delimited paths. ' +
                         'For full control, use a function instead.', vm);

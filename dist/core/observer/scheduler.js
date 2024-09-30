@@ -30,6 +30,7 @@ exports.queueWatcher = exports.currentFlushTimestamp = exports.MAX_UPDATE_COUNT 
 const config_1 = __importDefault(require("../config"));
 const dep_1 = __importStar(require("./dep"));
 const index_1 = require("../util/index");
+const isDev_1 = require("../util/isDev");
 exports.MAX_UPDATE_COUNT = 100;
 const queue = [];
 const activatedChildren = [];
@@ -44,7 +45,7 @@ let index = 0;
 function resetSchedulerState() {
     index = queue.length = activatedChildren.length = 0;
     has = {};
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         circular = {};
     }
     waiting = flushing = false;
@@ -112,7 +113,7 @@ function flushSchedulerQueue() {
         has[id] = null;
         watcher.run();
         // in dev build, check and stop circular updates.
-        if (__DEV__ && has[id] != null) {
+        if ((0, isDev_1.isDev)() && has[id] != null) {
             circular[id] = (circular[id] || 0) + 1;
             if (circular[id] > exports.MAX_UPDATE_COUNT) {
                 (0, index_1.warn)('You may have an infinite update loop ' +
@@ -161,7 +162,7 @@ function queueWatcher(watcher) {
     // queue the flush
     if (!waiting) {
         waiting = true;
-        if (__DEV__ && !config_1.default.async) {
+        if ((0, isDev_1.isDev)() && !config_1.default.async) {
             flushSchedulerQueue();
             return;
         }

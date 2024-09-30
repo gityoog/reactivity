@@ -8,6 +8,7 @@ const observer_1 = require("./core/observer");
 const reactive_1 = require("./reactive");
 const dep_1 = __importDefault(require("./core/observer/dep"));
 const util_1 = require("./core/util");
+const isDev_1 = require("./core/util/isDev");
 /**
  * @internal
  */
@@ -35,10 +36,10 @@ function createRef(rawValue, shallow) {
     return ref;
 }
 function triggerRef(ref) {
-    if (__DEV__ && !ref.dep) {
+    if ((0, isDev_1.isDev)() && !ref.dep) {
         (0, util_1.warn)(`received object is not a triggerable ref.`);
     }
-    if (__DEV__) {
+    if ((0, isDev_1.isDev)()) {
         ref.dep &&
             ref.dep.notify({
                 type: "set" /* TriggerOpTypes.SET */,
@@ -98,7 +99,7 @@ exports.proxyWithRefUnwrap = proxyWithRefUnwrap;
 function customRef(factory) {
     const dep = new dep_1.default();
     const { get, set } = factory(() => {
-        if (__DEV__) {
+        if ((0, isDev_1.isDev)()) {
             dep.depend({
                 target: ref,
                 type: "get" /* TrackOpTypes.GET */,
@@ -109,7 +110,7 @@ function customRef(factory) {
             dep.depend();
         }
     }, () => {
-        if (__DEV__) {
+        if ((0, isDev_1.isDev)()) {
             dep.notify({
                 target: ref,
                 type: "set" /* TriggerOpTypes.SET */,
@@ -133,7 +134,7 @@ function customRef(factory) {
 }
 exports.customRef = customRef;
 function toRefs(object) {
-    if (__DEV__ && !(0, reactive_1.isReactive)(object)) {
+    if ((0, isDev_1.isDev)() && !(0, reactive_1.isReactive)(object)) {
         (0, util_1.warn)(`toRefs() expects a reactive object but received a plain one.`);
     }
     const ret = (0, util_1.isArray)(object) ? new Array(object.length) : {};

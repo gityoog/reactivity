@@ -4,6 +4,7 @@ import Dep, { cleanupDeps } from './dep'
 
 import { warn, nextTick, devtools, inBrowser, isIE } from '../util/index'
 import type { Component } from '../../types/component'
+import { isDev } from '../util/isDev'
 
 export const MAX_UPDATE_COUNT = 100
 
@@ -21,7 +22,7 @@ let index = 0
 function resetSchedulerState() {
   index = queue.length = activatedChildren.length = 0
   has = {}
-  if (__DEV__) {
+  if (isDev()) {
     circular = {}
   }
   waiting = flushing = false
@@ -96,7 +97,7 @@ function flushSchedulerQueue() {
     has[id] = null
     watcher.run()
     // in dev build, check and stop circular updates.
-    if (__DEV__ && has[id] != null) {
+    if (isDev() && has[id] != null) {
       circular[id] = (circular[id] || 0) + 1
       if (circular[id] > MAX_UPDATE_COUNT) {
         warn(
@@ -155,7 +156,7 @@ export function queueWatcher(watcher: Watcher) {
   if (!waiting) {
     waiting = true
 
-    if (__DEV__ && !config.async) {
+    if (isDev() && !config.async) {
       flushSchedulerQueue()
       return
     }

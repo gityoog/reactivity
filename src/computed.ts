@@ -5,6 +5,7 @@ import Dep from './core/observer/dep'
 import { ReactiveFlags } from './reactive'
 import { TrackOpTypes } from './operations'
 import { DebuggerOptions } from './debug'
+import { isDev } from './core/util/isDev'
 
 declare const ComputedRefSymbol: unique symbol
 
@@ -43,7 +44,7 @@ export function computed<T>(
   const onlyGetter = isFunction(getterOrOptions)
   if (onlyGetter) {
     getter = getterOrOptions
-    setter = __DEV__
+    setter = isDev()
       ? () => {
         warn('Write operation failed: computed value is readonly')
       }
@@ -57,7 +58,7 @@ export function computed<T>(
     ? null
     : new Watcher(null, getter, noop, { lazy: true })
 
-  if (__DEV__ && watcher && debugOptions) {
+  if (isDev() && watcher && debugOptions) {
     watcher.onTrack = debugOptions.onTrack
     watcher.onTrigger = debugOptions.onTrigger
   }
@@ -72,7 +73,7 @@ export function computed<T>(
           watcher.evaluate()
         }
         if (Dep.target) {
-          if (__DEV__ && Dep.target.onTrack) {
+          if (isDev() && Dep.target.onTrack) {
             Dep.target.onTrack({
               effect: Dep.target,
               target: ref,

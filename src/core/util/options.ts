@@ -17,6 +17,7 @@ import {
   isPlainObject
 } from '../../shared/util'
 import type { Component } from '../../types/component'
+import { isDev } from './isDev'
 
 /**
  * Option overwriting strategies are functions that handle
@@ -28,7 +29,7 @@ const strats = config.optionMergeStrategies
 /**
  * Options with restrictions
  */
-if (__DEV__) {
+if (isDev()) {
   strats.el = strats.propsData = function (
     parent: any,
     child: any,
@@ -131,7 +132,7 @@ strats.data = function (
 ): Function | null {
   if (!vm) {
     if (childVal && typeof childVal !== 'function') {
-      __DEV__ &&
+      isDev() &&
         warn(
           'The "data" option should be a function ' +
           'that returns a per-instance value in component ' +
@@ -193,7 +194,7 @@ function mergeAssets(
 ): Object {
   const res = Object.create(parentVal || null)
   if (childVal) {
-    __DEV__ && assertObjectType(key, childVal, vm)
+    isDev() && assertObjectType(key, childVal, vm)
     return extend(res, childVal)
   } else {
     return res
@@ -223,7 +224,7 @@ strats.watch = function (
   if (childVal === nativeWatch) childVal = undefined
   /* istanbul ignore if */
   if (!childVal) return Object.create(parentVal || null)
-  if (__DEV__) {
+  if (isDev()) {
     assertObjectType(key, childVal, vm)
   }
   if (!parentVal) return childVal
@@ -253,7 +254,7 @@ strats.props =
     vm: Component | null,
     key: string
   ): Object | null {
-    if (childVal && __DEV__) {
+    if (childVal && isDev()) {
       assertObjectType(key, childVal, vm)
     }
     if (!parentVal) return childVal
@@ -331,7 +332,7 @@ function normalizeProps(options: Record<string, any>, vm?: Component | null) {
       if (typeof val === 'string') {
         name = camelize(val)
         res[name] = { type: null }
-      } else if (__DEV__) {
+      } else if (isDev()) {
         warn('props must be strings when using array syntax.')
       }
     }
@@ -341,7 +342,7 @@ function normalizeProps(options: Record<string, any>, vm?: Component | null) {
       name = camelize(key)
       res[name] = isPlainObject(val) ? val : { type: val }
     }
-  } else if (__DEV__) {
+  } else if (isDev()) {
     warn(
       `Invalid value for option "props": expected an Array or an Object, ` +
       `but got ${toRawType(props)}.`,
@@ -369,7 +370,7 @@ function normalizeInject(options: Record<string, any>, vm?: Component | null) {
         ? extend({ from: key }, val)
         : { from: val }
     }
-  } else if (__DEV__) {
+  } else if (isDev()) {
     warn(
       `Invalid value for option "inject": expected an Array or an Object, ` +
       `but got ${toRawType(inject)}.`,
@@ -427,7 +428,7 @@ export function resolveAsset(
   if (hasOwn(assets, PascalCaseId)) return assets[PascalCaseId]
   // fallback to prototype chain
   const res = assets[id] || assets[camelizedId] || assets[PascalCaseId]
-  if (__DEV__ && warnMissing && !res) {
+  if (isDev() && warnMissing && !res) {
     warn('Failed to resolve ' + type.slice(0, -1) + ': ' + id)
   }
   return res

@@ -1,13 +1,7 @@
 import { no, noop, identity } from '../shared/util'
 import { LIFECYCLE_HOOKS } from '../shared/constants'
 import type { Component } from '../types/component'
-import { inBrowser } from './util'
-
-if (inBrowser) {
-  window.__DEV__ = window.__DEV__ ?? true
-} else {
-  global.__DEV__ = global.__DEV__ ?? true
-}
+import { isDev } from './util/isDev'
 
 /**
  * @internal
@@ -54,12 +48,12 @@ export default {
   /**
    * Show production mode tip message on boot?
    */
-  productionTip: __DEV__,
+  productionTip: isDev(),
 
   /**
    * Whether to enable devtools
    */
-  devtools: __DEV__,
+  devtools: isDev(),
 
   /**
    * Whether to record perf

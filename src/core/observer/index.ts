@@ -17,6 +17,7 @@ import {
 import { isReadonly } from '../../reactive'
 import { TrackOpTypes, TriggerOpTypes } from '../../operations'
 import { isRef } from '../../ref'
+import { isDev } from '../util/isDev'
 
 const arrayKeys = Object.getOwnPropertyNames(arrayMethods)
 
@@ -158,7 +159,7 @@ export function defineReactive(
     get: function reactiveGetter() {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
-        if (__DEV__) {
+        if (isDev()) {
           dep.depend({
             target: obj,
             type: TrackOpTypes.GET,
@@ -181,7 +182,7 @@ export function defineReactive(
       if (!hasChanged(value, newVal)) {
         return
       }
-      if (__DEV__ && customSetter) {
+      if (isDev() && customSetter) {
         customSetter()
       }
       if (setter) {
@@ -196,7 +197,7 @@ export function defineReactive(
         val = newVal
       }
       childOb = shallow ? newVal && newVal.__ob__ : observe(newVal, false, mock)
-      if (__DEV__) {
+      if (isDev()) {
         dep.notify({
           type: TriggerOpTypes.SET,
           target: obj,
@@ -225,13 +226,13 @@ export function set(
   key: any,
   val: any
 ): any {
-  if (__DEV__ && (isUndef(target) || isPrimitive(target))) {
+  if (isDev() && (isUndef(target) || isPrimitive(target))) {
     warn(
       `Cannot set reactive property on undefined, null, or primitive value: ${target}`
     )
   }
   if (isReadonly(target)) {
-    __DEV__ && warn(`Set operation on key "${key}" failed: target is readonly.`)
+    isDev() && warn(`Set operation on key "${key}" failed: target is readonly.`)
     return
   }
   const ob = (target as any).__ob__
@@ -249,7 +250,7 @@ export function set(
     return val
   }
   if ((target as any)._isVue || (ob && ob.vmCount)) {
-    __DEV__ &&
+    isDev() &&
       warn(
         'Avoid adding reactive properties to a Vue instance or its root $data ' +
         'at runtime - declare it upfront in the data option.'
@@ -261,7 +262,7 @@ export function set(
     return val
   }
   defineReactive(ob.value, key, val, undefined, ob.shallow, ob.mock)
-  if (__DEV__) {
+  if (isDev()) {
     ob.dep.notify({
       type: TriggerOpTypes.ADD,
       target: target,
@@ -281,7 +282,7 @@ export function set(
 export function del<T>(array: T[], key: number): void
 export function del(object: object, key: string | number): void
 export function del(target: any[] | object, key: any) {
-  if (__DEV__ && (isUndef(target) || isPrimitive(target))) {
+  if (isDev() && (isUndef(target) || isPrimitive(target))) {
     warn(
       `Cannot delete reactive property on undefined, null, or primitive value: ${target}`
     )
@@ -292,7 +293,7 @@ export function del(target: any[] | object, key: any) {
   }
   const ob = (target as any).__ob__
   if ((target as any)._isVue || (ob && ob.vmCount)) {
-    __DEV__ &&
+    isDev() &&
       warn(
         'Avoid deleting properties on a Vue instance or its root $data ' +
         '- just set it to null.'
@@ -300,7 +301,7 @@ export function del(target: any[] | object, key: any) {
     return
   }
   if (isReadonly(target)) {
-    __DEV__ &&
+    isDev() &&
       warn(`Delete operation on key "${key}" failed: target is readonly.`)
     return
   }
@@ -311,7 +312,7 @@ export function del(target: any[] | object, key: any) {
   if (!ob) {
     return
   }
-  if (__DEV__) {
+  if (isDev()) {
     ob.dep.notify({
       type: TriggerOpTypes.DELETE,
       target: target,

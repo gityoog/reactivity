@@ -1,5 +1,6 @@
 import Watcher from './core/observer/watcher'
 import { warn } from './core/util'
+import { isDev } from './core/util/isDev'
 
 export let activeEffectScope: EffectScope | undefined
 
@@ -55,7 +56,7 @@ export class EffectScope {
       } finally {
         activeEffectScope = currentEffectScope
       }
-    } else if (__DEV__) {
+    } else if (isDev()) {
       warn(`cannot run an inactive effect scope.`)
     }
   }
@@ -128,7 +129,7 @@ export function getCurrentScope() {
 export function onScopeDispose(fn: () => void) {
   if (activeEffectScope) {
     activeEffectScope.cleanups.push(fn)
-  } else if (__DEV__) {
+  } else if (isDev()) {
     warn(
       `onScopeDispose() is called when there is no active effect scope` +
       ` to be associated with.`

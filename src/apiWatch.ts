@@ -16,12 +16,12 @@ import Watcher from './core/observer/watcher'
 import { queueWatcher } from './core/observer/scheduler'
 import { DebuggerOptions } from './debug'
 import { Component } from './types/component'
+import { isDev } from './core/util/isDev'
 
 const WATCHER = `watcher`
 const WATCHER_CB = `${WATCHER} callback`
 const WATCHER_GETTER = `${WATCHER} getter`
 const WATCHER_CLEANUP = `${WATCHER} cleanup`
-
 export type WatchEffect = (onCleanup: OnCleanup) => void
 
 export type WatchSource<T = any> = Ref<T> | ComputedRef<T> | (() => T)
@@ -72,7 +72,7 @@ export function watchPostEffect(
   return doWatch(
     effect,
     null,
-    (__DEV__
+    (isDev()
       ? { ...options, flush: 'post' }
       : { flush: 'post' }) as WatchOptionsBase
   )
@@ -85,7 +85,7 @@ export function watchSyncEffect(
   return doWatch(
     effect,
     null,
-    (__DEV__
+    (isDev()
       ? { ...options, flush: 'sync' }
       : { flush: 'sync' }) as WatchOptionsBase
   )
@@ -141,7 +141,7 @@ export function watch<T = any, Immediate extends Readonly<boolean> = false>(
   cb: any,
   options?: WatchOptions<Immediate>
 ): WatchStopHandle {
-  if (__DEV__ && typeof cb !== 'function') {
+  if (isDev() && typeof cb !== 'function') {
     warn(
       `\`watch(fn, options?)\` signature has been moved to a separate API. ` +
       `Use \`watchEffect(fn, options?)\` instead. \`watch\` now only ` +
@@ -162,7 +162,7 @@ function doWatch(
     onTrigger
   }: WatchOptions = emptyObject
 ): WatchStopHandle {
-  if (__DEV__ && !cb) {
+  if (isDev() && !cb) {
     if (immediate !== undefined) {
       warn(
         `watch() "immediate" option is only respected when using the ` +
@@ -217,7 +217,7 @@ function doWatch(
         } else if (isFunction(s)) {
           return call(s, WATCHER_GETTER)
         } else {
-          __DEV__ && warnInvalidSource(s)
+          isDev() && warnInvalidSource(s)
         }
       })
   } else if (isFunction(source)) {
@@ -235,7 +235,7 @@ function doWatch(
     }
   } else {
     getter = noop
-    __DEV__ && warnInvalidSource(source)
+    isDev() && warnInvalidSource(source)
   }
 
   if (cb && deep) {
@@ -320,7 +320,7 @@ function doWatch(
     }
   }
 
-  if (__DEV__) {
+  if (isDev()) {
     watcher.onTrack = onTrack
     watcher.onTrigger = onTrigger
   }

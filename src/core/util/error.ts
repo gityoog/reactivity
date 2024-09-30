@@ -4,6 +4,7 @@ import { inBrowser } from './env'
 import { isPromise } from '../../shared/util'
 import { pushTarget, popTarget } from '../observer/dep'
 import { Component } from '../../types/component'
+import { isDev } from './isDev'
 
 export function handleError(err: Error, vm: any, info: string) {
   // Deactivate deps tracking while processing error handler to avoid possible infinite rendering.
@@ -70,7 +71,7 @@ function globalHandleError(err: Error, vm: Component | null, info: string) {
 }
 
 function logError(err: Error, vm: Component | null, info: string) {
-  if (__DEV__) {
+  if (isDev()) {
     warn(`Error in ${info}: "${err.toString()}"`, vm)
   }
   /* istanbul ignore else */

@@ -1,4 +1,5 @@
 import { def, warn, isPlainObject, isArray } from './core/util'
+import { isDev } from './core/util/isDev'
 import {
   isCollectionType,
   isReadonly,
@@ -43,7 +44,7 @@ export function readonly<T extends object>(
 
 function createReadonly(target: any, shallow: boolean) {
   if (!isPlainObject(target)) {
-    if (__DEV__) {
+    if (isDev()) {
       if (isArray(target)) {
         warn(`Vue 2 does not support readonly arrays.`)
       } else if (isCollectionType(target)) {
@@ -57,7 +58,7 @@ function createReadonly(target: any, shallow: boolean) {
     return target as any
   }
 
-  if (__DEV__ && !Object.isExtensible(target)) {
+  if (isDev() && !Object.isExtensible(target)) {
     warn(
       `Vue 2 does not support creating readonly proxy for non-extensible object.`
     )
@@ -110,7 +111,7 @@ function defineReadonlyProperty(
       return shallow || !isPlainObject(val) ? val : readonly(val)
     },
     set() {
-      __DEV__ &&
+      isDev() &&
         warn(`Set operation on key "${key}" failed: target is readonly.`)
     }
   })

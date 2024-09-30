@@ -17,6 +17,7 @@ import { DebuggerEvent, DebuggerOptions } from '../../debug'
 import type { SimpleSet } from '../util/index'
 import type { Component } from '../../types/component'
 import { activeEffectScope, recordEffectScope } from '../../effectScope'
+import { isDev } from '../util/isDev'
 
 let uid = 0
 
@@ -90,7 +91,7 @@ export default class Watcher implements DepTarget {
       this.lazy = !!options.lazy
       this.sync = !!options.sync
       this.before = options.before
-      if (__DEV__) {
+      if (isDev()) {
         this.onTrack = options.onTrack
         this.onTrigger = options.onTrigger
       }
@@ -106,7 +107,7 @@ export default class Watcher implements DepTarget {
     this.newDeps = []
     this.depIds = new Set()
     this.newDepIds = new Set()
-    this.expression = __DEV__ ? expOrFn.toString() : ''
+    this.expression = isDev() ? expOrFn.toString() : ''
     // parse expression for getter
     if (isFunction(expOrFn)) {
       this.getter = expOrFn
@@ -114,7 +115,7 @@ export default class Watcher implements DepTarget {
       this.getter = parsePath(expOrFn)
       if (!this.getter) {
         this.getter = noop
-        __DEV__ &&
+        isDev() &&
           warn(
             `Failed watching path: "${expOrFn}" ` +
             'Watcher only accepts simple dot-delimited paths. ' +

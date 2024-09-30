@@ -8,6 +8,7 @@ import type { IfAny } from './types/utils'
 import Dep from './core/observer/dep'
 import { warn, isArray, def, isServerRendering } from './core/util'
 import { TrackOpTypes, TriggerOpTypes } from './operations'
+import { isDev } from './core/util/isDev'
 
 declare const RefSymbol: unique symbol
 export declare const RawSymbol: unique symbol
@@ -75,10 +76,10 @@ function createRef(rawValue: unknown, shallow: boolean) {
 }
 
 export function triggerRef(ref: Ref) {
-  if (__DEV__ && !ref.dep) {
+  if (isDev() && !ref.dep) {
     warn(`received object is not a triggerable ref.`)
   }
-  if (__DEV__) {
+  if (isDev()) {
     ref.dep &&
       ref.dep.notify({
         type: TriggerOpTypes.SET,
@@ -149,7 +150,7 @@ export function customRef<T>(factory: CustomRefFactory<T>): Ref<T> {
   const dep = new Dep()
   const { get, set } = factory(
     () => {
-      if (__DEV__) {
+      if (isDev()) {
         dep.depend({
           target: ref,
           type: TrackOpTypes.GET,
@@ -160,7 +161,7 @@ export function customRef<T>(factory: CustomRefFactory<T>): Ref<T> {
       }
     },
     () => {
-      if (__DEV__) {
+      if (isDev()) {
         dep.notify({
           target: ref,
           type: TriggerOpTypes.SET,
@@ -188,7 +189,7 @@ export type ToRefs<T = any> = {
 }
 
 export function toRefs<T extends object>(object: T): ToRefs<T> {
-  if (__DEV__ && !isReactive(object)) {
+  if (isDev() && !isReactive(object)) {
     warn(`toRefs() expects a reactive object but received a plain one.`)
   }
   const ret: any = isArray(object) ? new Array(object.length) : {}

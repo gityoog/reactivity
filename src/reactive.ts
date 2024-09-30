@@ -7,6 +7,7 @@ import {
   toRawType,
   isServerRendering
 } from './core/util'
+import { isDev } from './core/util/isDev'
 import type { Ref, UnwrapRefSimple, RawSymbol } from './ref'
 
 export const enum ReactiveFlags {
@@ -53,7 +54,7 @@ export function shallowReactive<T extends object>(
 function makeReactive(target: any, shallow: boolean) {
   // if trying to observe a readonly proxy, return the readonly version.
   if (!isReadonly(target)) {
-    if (__DEV__) {
+    if (isDev()) {
       if (isArray(target)) {
         warn(
           `Avoid using Array as root value for ${shallow ? `shallowReactive()` : `reactive()`
@@ -75,7 +76,7 @@ function makeReactive(target: any, shallow: boolean) {
       shallow,
       isServerRendering() /* ssr mock reactivity */
     )
-    if (__DEV__ && !ob) {
+    if (isDev() && !ob) {
       if (target == null || isPrimitive(target)) {
         warn(`value cannot be made reactive: ${String(target)}`)
       }

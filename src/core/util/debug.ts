@@ -1,11 +1,12 @@
 import config from '../config'
 import { noop } from '../../shared/util'
 import type { Component } from '../../types/component'
+import { isDev } from './isDev'
 
 export let warn: (msg: string, vm?: Component | null) => void = noop
 export let tip = noop
 
-if (__DEV__) {
+if (isDev()) {
   const hasConsole = typeof console !== 'undefined'
 
   warn = (msg, vm = null) => {

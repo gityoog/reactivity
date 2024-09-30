@@ -1,5 +1,6 @@
 import config from '../config'
 import { DebuggerOptions, DebuggerEventExtraInfo } from '../../debug'
+import { isDev } from '../util/isDev'
 
 let uid = 0
 
@@ -59,7 +60,7 @@ export default class Dep {
   depend(info?: DebuggerEventExtraInfo) {
     if (Dep.target) {
       Dep.target.addDep(this)
-      if (__DEV__ && info && Dep.target.onTrack) {
+      if (isDev() && info && Dep.target.onTrack) {
         Dep.target.onTrack({
           effect: Dep.target,
           ...info
@@ -71,7 +72,7 @@ export default class Dep {
   notify(info?: DebuggerEventExtraInfo) {
     // stabilize the subscriber list first
     const subs = this.subs.filter(s => s) as DepTarget[]
-    if (__DEV__ && !config.async) {
+    if (isDev() && !config.async) {
       // subs aren't sorted in scheduler if not running async
       // we need to sort them now to make sure they fire in correct
       // order
@@ -79,7 +80,7 @@ export default class Dep {
     }
     for (let i = 0, l = subs.length; i < l; i++) {
       const sub = subs[i]
-      if (__DEV__ && info) {
+      if (isDev() && info) {
         sub.onTrigger &&
           sub.onTrigger({
             effect: subs[i],

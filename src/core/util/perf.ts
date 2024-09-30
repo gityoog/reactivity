@@ -1,9 +1,10 @@
 import { inBrowser } from './env'
+import { isDev } from './isDev'
 
 export let mark: (tag: string) => void
 export let measure: (name: string, startTag: string, endTag: string) => void
 
-if (__DEV__) {
+if (isDev()) {
   const perf = inBrowser && window.performance
   /* istanbul ignore if */
   if (

@@ -8,3 +8,4 @@ export { DebuggerOptions, DebuggerEvent, DebuggerEventExtraInfo } from './debug'
 export { TrackOpTypes, TriggerOpTypes } from './operations';
 export { nextTick } from './core/util/next-tick';
 export { set, del } from './core/observer';
+export { setDev } from './core/util/isDev';

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setDev = exports.del = exports.set = exports.nextTick = exports.getCurrentScope = exports.onScopeDispose = exports.effectScope = exports.EffectScope = exports.watchSyncEffect = exports.watchPostEffect = exports.watchEffect = exports.watch = exports.computed = exports.shallowReadonly = exports.readonly = exports.toRaw = exports.markRaw = exports.shallowReactive = exports.isProxy = exports.isShallow = exports.isReadonly = exports.isReactive = exports.reactive = exports.triggerRef = exports.customRef = exports.proxyRefs = exports.unref = exports.toRefs = exports.toRef = exports.isRef = exports.shallowRef = exports.ref = void 0;
+exports.popTarget = exports.pushTarget = exports.setDev = exports.del = exports.set = exports.nextTick = exports.getCurrentScope = exports.onScopeDispose = exports.effectScope = exports.EffectScope = exports.watchSyncEffect = exports.watchPostEffect = exports.watchEffect = exports.watch = exports.computed = exports.shallowReadonly = exports.readonly = exports.toRaw = exports.markRaw = exports.shallowReactive = exports.isProxy = exports.isShallow = exports.isReadonly = exports.isReactive = exports.reactive = exports.triggerRef = exports.customRef = exports.proxyRefs = exports.unref = exports.toRefs = exports.toRef = exports.isRef = exports.shallowRef = exports.ref = void 0;
 var ref_1 = require("./ref");
 Object.defineProperty(exports, "ref", { enumerable: true, get: function () { return ref_1.ref; } });
 Object.defineProperty(exports, "shallowRef", { enumerable: true, get: function () { return ref_1.shallowRef; } });
@@ -42,3 +42,6 @@ Object.defineProperty(exports, "set", { enumerable: true, get: function () { ret
 Object.defineProperty(exports, "del", { enumerable: true, get: function () { return observer_1.del; } });
 var isDev_1 = require("./core/util/isDev");
 Object.defineProperty(exports, "setDev", { enumerable: true, get: function () { return isDev_1.setDev; } });
+var dep_1 = require("./core/observer/dep");
+Object.defineProperty(exports, "pushTarget", { enumerable: true, get: function () { return dep_1.pushTarget; } });
+Object.defineProperty(exports, "popTarget", { enumerable: true, get: function () { return dep_1.popTarget; } });

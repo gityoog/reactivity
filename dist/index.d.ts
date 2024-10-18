@@ -9,3 +9,4 @@ export { TrackOpTypes, TriggerOpTypes } from './operations';
 export { nextTick } from './core/util/next-tick';
 export { set, del } from './core/observer';
 export { setDev } from './core/util/isDev';
+export { pushTarget, popTarget } from './core/observer/dep';
